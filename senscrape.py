@@ -20,8 +20,10 @@ def scrapetop(y,m,d):
             # text is matchable
             if re.match('\(Senate',l.text):
                 itemnum+=1
+                print itemnum
                 prefix = "{year}{month:02d}{day:02d}_senate({item:03d})".format(year=y,month=m,day=d,item=itemnum)
                 print l.text
+                print l.get('href')
                 scrapesingle(l.get('href'),prefix)
     u.close()
 
@@ -30,14 +32,16 @@ def scrapesingle(singleurl,prefix):
     parser = etree.HTMLParser()
     u = urllib.urlopen("http://thomas.loc.gov/"+singleurl)
     tree   = etree.parse(u, parser)
+    u.close()
     links = tree.xpath('.//a/em')
-    for l in links:
+    if len(links)>0:
+        l = links[0]
         pfurl = l.getparent().get('href')
-    u.close()
-    print pfurl
-    u = urllib.urlopen("http://thomas.loc.gov/"+pfurl)    
-    t = lxml.html.fromstring(u.read())
-    u.close()
+        print pfurl
+        u = urllib.urlopen("http://thomas.loc.gov/"+pfurl)    
+        t = lxml.html.fromstring(u.read())
+    else:
+        print "Error trying to scrape: " + prefix
     # just get the text from the printer friendly version
     # first remove the tags.
     singletext = etree.tostring(t)    
@@ -54,8 +58,8 @@ def scrapesingle(singleurl,prefix):
                 f.close()
             break
         presiding =  re.match("The PRESIDING OFFICER",line) # presiding officer
-        speaker =  re.match("(\w\w+)\.\s((Mc)?[A-Z]+[A-Z])(\s(of)\s(\w+))?\.",line) # two or more letters in a last name        
-        bill =  re.match("\s*S. \d*",line) # two or more letters in a last name                
+        speaker =  re.match("\s*(\w\w+)\.\s((Mc)?[A-Z]+[A-Z])(\s(of)\s(\w+))?\.",line) # two or more letters in a last name
+        bill =  re.match("\s*S\. \d*",line) # eg, S. 2333
         if presiding or bill:
             if f:
                 f.close()
