@@ -58,7 +58,7 @@ def scrapesingle(singleurl,prefix):
                 f.close()
             break
         presiding =  re.match("The PRESIDING OFFICER",line) # presiding officer
-        speaker =  re.match("\s*(\w\w+)\.\s((Mc)?[A-Z]+[A-Z])(\s(of)\s(\w+))?\.",line) # two or more letters in a last name
+        speaker =  re.match("\s*(\w\w+)\.\s((Mc)?[A-Z]+[A-Z])(\s(of)((\s\w+)?\s(\w+)))?\.",line) # two or more letters in a last name
         bill =  re.match("\s*S\. \d*",line) # eg, S. 2333
         if presiding or bill:
             if f:
@@ -72,7 +72,7 @@ def scrapesingle(singleurl,prefix):
             currentspeaker = speaker.group(1)+speaker.group(2)
             if speaker.group(6):
                 #                 Massachusetts
-                currentspeaker += speaker.group(6)
+                currentspeaker += re.sub(' ','',speaker.group(6))
             print line[0:50]+'...'                            
             fname = prefix + "[" + str.zfill(str(speakernum),4) + "]" + currentspeaker
             print fname
