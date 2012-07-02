@@ -40,6 +40,7 @@ def scrapesingle(singleurl,prefix):
         print pfurl
         u = urllib.urlopen("http://thomas.loc.gov/"+pfurl)    
         t = lxml.html.fromstring(u.read())
+        print t
     else:
         print "Error trying to scrape: " + prefix
     # just get the text from the printer friendly version
@@ -51,7 +52,6 @@ def scrapesingle(singleurl,prefix):
     singletext = re.sub('\[Page:.*?\]','',singletext)
     # then remove the goofy formatting of spaces
     singletext = re.sub('&#160;','',singletext)       
-    print singletext
     f = None
     for line in singletext.split('\n'):
         if line=="END":
