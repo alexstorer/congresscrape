@@ -40,12 +40,12 @@ def scrapesingle(singleurl,prefix):
         print pfurl
         u = urllib.urlopen("http://thomas.loc.gov/"+pfurl)    
         t = lxml.html.fromstring(u.read())
-        print t
     else:
         print "Error trying to scrape: " + prefix
     # just get the text from the printer friendly version
     # first remove the tags.
     singletext = etree.tostring(t)    
+    print singletext
     singletext = re.sub('<.?p>','\n',singletext)
     singletext = re.sub('<.*?>','',singletext)    
     # then, remove the pagination
