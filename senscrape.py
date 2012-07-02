@@ -51,11 +51,9 @@ def scrapesingle(singleurl,prefix):
     singletext = re.sub('\[Page:.*?\]','',singletext)
     # then remove the goofy formatting of spaces
     singletext = re.sub('&#160;','',singletext)       
+    print singletext
     f = None
-    currentspeaker = "None"
     for line in singletext.split('\n'):
-        if len(line.strip())>0:
-            print currentspeaker, line
         if line=="END":
             if f:
                 f.close()
