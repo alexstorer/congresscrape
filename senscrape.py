@@ -45,13 +45,15 @@ def scrapesingle(singleurl,prefix):
     # just get the text from the printer friendly version
     # first remove the tags.
     singletext = etree.tostring(t)    
-    print singletext
+    #print singletext
     singletext = re.sub('<.?p>','\n',singletext)
+    singletext = re.sub('<em>(.*?)</em>', lambda m: m.group(1).upper(), singletext)
     singletext = re.sub('<.*?>','',singletext)    
     # then, remove the pagination
     singletext = re.sub('\[Page:.*?\]','',singletext)
     # then remove the goofy formatting of spaces
     singletext = re.sub('&#160;','',singletext)       
+    #print singletext
     f = None
     for line in singletext.split('\n'):
         if line=="END":
