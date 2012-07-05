@@ -61,12 +61,19 @@ def scrapesingle(singleurl,prefix):
                 f.close()
             break
         presiding =  re.match("The PRESIDING OFFICER",line) # presiding officer
+        actpres =  re.match("The ACTING PRESIDENT",line)
+        allcaps = line==line.upper() and line!=line.lower()
         speaker =  re.match("\s*(\w\w+)\.\s((Mc)?[A-Z]+[A-Z])(\s(of)((\s\w+)?\s(\w+)))?\.",line) # two or more letters in a last name
         bill =  re.match("\s*S\. \d*",line) # eg, S. 2333
-        if presiding or bill:
+        if presiding or bill or actpres:
             if f:
                 f.close()
                 f = None
+        if allcaps:
+            line = ""
+            # skip the line!
+            # print "Skipping line: "
+            # print line
         if speaker:
             if f:
                 f.close()
